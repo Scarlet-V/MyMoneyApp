@@ -142,7 +142,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             )),
                   ),
                   RaisedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      //add to where it will save user information
+                    },
                     color: Colors.green,
                     padding: EdgeInsets.symmetric(horizontal: 50),
                     elevation: 2,

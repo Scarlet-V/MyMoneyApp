@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:testing/profile_page.dart';
 import 'package:testing/themes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:testing/add_loan_page.dart';
 
 
 void main() {
@@ -16,6 +17,7 @@ void main() {
         '/': (context) => const HomePage(),
         // When navigating to the "/second" route, build the SecondScreen widget.
         '/second': (context) => EditProfilePage(),
+        '/third': (context) => AddNewLoan(),
       },
     ),
   );
@@ -47,10 +49,12 @@ class HomePage extends StatelessWidget {
             Align(
               alignment: Alignment.topLeft,
             child: TextButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/third');
+                  },
                   icon: const Icon(
                       Icons.add,
-                    color: Colors.white,
+                    color: Colors.green,
                   ),
                   label: const Text('Add new loan')
               ),
@@ -79,7 +83,7 @@ class HomePage extends StatelessWidget {
   }
 }
 
-Widget buildInsertButton() => RaisedButton(
+Widget buildInsertButton() => ElevatedButton(
     child: Text('Add new loan',
     style: TextStyle(fontSize: 20)
     ),
