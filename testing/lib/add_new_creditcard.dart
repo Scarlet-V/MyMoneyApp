@@ -10,12 +10,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 
-class AddNewLoan extends StatefulWidget {
+class AddNewCreditCard extends StatefulWidget {
   @override
-  _AddNewLoanState createState() => _AddNewLoanState();
+  _AddNewCreditCardState createState() => _AddNewCreditCardState();
 }
 
-class _AddNewLoanState extends State<AddNewLoan> {
+class _AddNewCreditCardState extends State<AddNewCreditCard> {
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class _AddNewLoanState extends State<AddNewLoan> {
             children: [
               Align(
                 alignment: Alignment.topLeft,
-                child: Text('Loan Name',
+                child: Text('Credit Card',
                   style: TextStyle(
                     fontSize: 30,
                     //fontWeight: FontWeight.bold,
@@ -38,13 +38,13 @@ class _AddNewLoanState extends State<AddNewLoan> {
               ),
               Align(
                 alignment: Alignment.topLeft,
-                child: Text('Loan Name'),
-                ),
+                child: Text('Credit Card Name'),
+              ),
 
             ],
           ),
           appBar: AppBar(
-            title: const Text('Add New Loan'),
+            title: const Text('Add New Credit Card'),
             backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
             elevation: 1,
             leading: IconButton(

@@ -3,7 +3,8 @@ import 'package:testing/profile_page.dart';
 import 'package:testing/themes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:testing/add_loan_page.dart';
-
+import 'package:testing/add_new_bill.dart';
+import 'package:testing/add_new_creditcard.dart';
 
 void main() {
   runApp(
@@ -17,7 +18,9 @@ void main() {
         '/': (context) => const HomePage(),
         // When navigating to the "/second" route, build the SecondScreen widget.
         '/second': (context) => EditProfilePage(),
-        '/third': (context) => AddNewLoan(),
+        '/third': (context) => AddNewBill(),
+        '/fourth': (context) => AddNewCreditCard(),
+        '/fifth': (context) => AddNewLoan(),
       },
     ),
   );
@@ -38,7 +41,7 @@ class HomePage extends StatelessWidget {
           children:[
             Align(
               alignment: Alignment.topLeft,
-              child: Text('Loans',
+              child: Text('Bills',
                   style: TextStyle(
                       fontSize: 30,
                       //fontWeight: FontWeight.bold,
@@ -48,12 +51,58 @@ class HomePage extends StatelessWidget {
         ),
             Align(
               alignment: Alignment.topLeft,
-            child: TextButton.icon(
+              child: TextButton.icon(
                   onPressed: () {
                     Navigator.pushNamed(context, '/third');
                   },
                   icon: const Icon(
-                      Icons.add,
+                    Icons.add,
+                    color: Colors.green,
+                  ),
+                  label: const Text('Add new bill')
+              ),
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Text('Credit Cards',
+                style: TextStyle(
+                  fontSize: 30,
+                  //fontWeight: FontWeight.bold,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: TextButton.icon(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/fourth');
+                  },
+                  icon: const Icon(
+                    Icons.add,
+                    color: Colors.green,
+                  ),
+                  label: const Text('Add new credit card')
+              ),
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Text('Loans',
+                style: TextStyle(
+                  fontSize: 30,
+                  //fontWeight: FontWeight.bold,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: TextButton.icon(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/fifth');
+                  },
+                  icon: const Icon(
+                    Icons.add,
                     color: Colors.green,
                   ),
                   label: const Text('Add new loan')
