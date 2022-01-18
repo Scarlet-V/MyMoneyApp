@@ -174,7 +174,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       padding: const EdgeInsets.only(bottom: 35.0),
       child: TextField(
         obscureText: isPasswordTextField ? showPassword : false,
-        style: TextStyle(color: Colors.red),
+        style: TextStyle(color: Colors.green),
         decoration: InputDecoration(
             suffixIcon: isPasswordTextField
                 ? IconButton(

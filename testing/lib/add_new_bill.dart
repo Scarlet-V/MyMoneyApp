@@ -6,6 +6,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/src/painting/image_provider.dart';
 import 'package:testing/themes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'main.dart';
+import 'package:testing/add_loan_page.dart';
 
 
 
@@ -16,6 +18,9 @@ class AddNewBill extends StatefulWidget {
 }
 
 class _AddNewBillState extends State<AddNewBill> {
+  //var _billNameController = new TextEditingController();
+  //var _billAmountController = new TextEditingController();
+  //var _billMonthlyController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,24 +30,84 @@ class _AddNewBillState extends State<AddNewBill> {
       darkTheme: MyThemes.darkTheme,
       color: Theme.of(context).primaryColor,
       home: Scaffold(
-          body: Column(
-            children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text('Bill',
-                  style: TextStyle(
-                    fontSize: 30,
-                    //fontWeight: FontWeight.bold,
+        /*
+          body: new ListView(
+            children: <Widget>[
+              SizedBox(
+                height: 30,
+              ),
+              new ListTile(
+                title: new TextField(
+                  decoration: InputDecoration(
+                    labelText: "Bill Name",
+                    labelStyle: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black
+                    ),
                   ),
+
+                  controller: _billNameController,
                 ),
               ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text('Bill Name'),
+              SizedBox(
+                height: 30,
               ),
-
+              new ListTile(
+                title: new TextField(
+                  decoration: InputDecoration(
+                      labelText: "Total Bill Amount",
+                      labelStyle: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black
+                      )
+                  ),
+                  controller: _billAmountController,
+                ),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              new ListTile(
+                title: new TextField(
+                  decoration: InputDecoration(
+                      labelText: "Monthly Bill Payment",
+                      labelStyle: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black
+                      )
+                  ),
+                  controller: _billMonthlyController,
+                ),
+              ),
+              SizedBox(
+                height:250,
+              ),
+              new ListTile(
+                title: new RaisedButton(
+                  child: new Text("Save",
+                    style: TextStyle(
+                        fontSize: 14,
+                        letterSpacing: 2.2,
+                        color: Colors.white),
+                  ),
+                  color: Colors.green,
+                  padding: EdgeInsets.symmetric(horizontal: 50),
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  onPressed: (){
+                    // var route = new MaterialPageRoute(
+                    // builder: (BuildContext context) => new HomePage(value: _loanNameController.text, totalloanamount: _loanAmountController.text, loanmonthlypayment: _loanMonthlyController.text,billname: _billNameController.text, totalbillamount: _billAmountController.text, billmonthlypayment: _billMonthlyController.text,),
+                    );
+                    Navigator.of(context).push(route);
+                  },
+                ),
+              ),
             ],
-          ),
+          ),*/
           appBar: AppBar(
             title: const Text('Add New Bill'),
             backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
