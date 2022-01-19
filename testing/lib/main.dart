@@ -45,6 +45,7 @@ class _HomePageState extends State<HomePage> {
   final List<Bill>  bills= [];
   final List<CreditCard> creditcards=[];
   var _incomeAmountController = new TextEditingController();
+  String income = '';
   //late var balance = 3500 - ${bill.monthlyPayment} - ${loan.monthlyPayment} - ${creditcard.monthlyPayment};
 
 
@@ -63,6 +64,16 @@ class _HomePageState extends State<HomePage> {
       creditcards.add(creditcard);
     });
   }
+  @override
+  void initState(){
+    super.initState();
+    _incomeAmountController = TextEditingController();
+  }
+  @override
+  void dispose(){
+    _incomeAmountController.dispose();
+        super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,19 +91,38 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children:[
             Container(
-              padding: EdgeInsets.only( bottom: 20, right: 16),
-                child: TextField(
-                decoration: InputDecoration(
-                    labelText: "Income",
-                    labelStyle: TextStyle(
+              padding: EdgeInsets.only(  right: 16),
+                child: Row(
+                  children: [
+                    Expanded(child: Text("Income: ",
+                    style: TextStyle(fontSize: 30),
+                    ),
+                    ),
+                    const SizedBox(width: 12),
+                      Text('\u0024${income}',
+                      style: TextStyle(
                         fontSize: 30,
-                        //fontWeight: FontWeight.w500,
-                        color: Colors.black
-                    )
+                        color: Colors.green
+                      ),),
+                  ],
                 ),
-                controller: _incomeAmountController,
-              ),
             ),
+            Container(
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: TextButton.icon(
+                  onPressed: () async {
+                    final income = await openDialog();
+                    if (income == null || income.isEmpty) return;
+                    setState(() => this.income = income);
+                  },
+                  icon: const Icon(
+                    Icons.add,
+                    color: Colors.green,
+                  ),
+                  label: const Text('Input your income', style: TextStyle(color: Colors.green),)
+              ),
+              ),),
             Container(
             //padding:
             //    if(bill = null){
@@ -132,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                     Icons.add,
                     color: Colors.green,
                   ),
-                  label: const Text('Add new bill')
+                  label: const Text('Add new bill', style: TextStyle(color: Colors.green),)
               ),
             ),
             Container(
@@ -156,22 +186,22 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: TextButton.icon(
-                  onPressed: () async {
-                    dynamic creditcard = await Navigator.pushNamed(context, '/fourth');
-                    if(creditcard != null && creditcard is CreditCard){
-                      addNewCreditCard(creditcard);
-                    }
-                  },
-                  icon: const Icon(
-                    Icons.add,
-                    color: Colors.green,
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: TextButton.icon(
+                        onPressed: () async {
+                          dynamic creditcard = await Navigator.pushNamed(context, '/fourth');
+                          if(creditcard != null && creditcard is CreditCard){
+                            addNewCreditCard(creditcard);
+                          }
+                        },
+                        icon: const Icon(
+                          Icons.add,
+                          color: Colors.green,
+                        ),
+                        label: const Text('Add new credit card', style: TextStyle(color: Colors.green))
+                    ),
                   ),
-                  label: const Text('Add new credit card')
-              ),
-            ),
             Container(
                 padding: EdgeInsets.only(bottom: 5),
                 child: Align(
@@ -210,7 +240,7 @@ class _HomePageState extends State<HomePage> {
                     Icons.add,
                     color: Colors.green,
                   ),
-                  label: const Text('Add new loan')
+                  label: const Text('Add new loan', style: TextStyle(color: Colors.green))
               ),
             ),
             ],
@@ -255,6 +285,26 @@ class _HomePageState extends State<HomePage> {
           ),
             ),
         );
+  }
+  Future<String?> openDialog() => showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Your Income"),
+        content: TextField(
+          controller: _incomeAmountController,
+          autofocus: true,
+          decoration: InputDecoration(hintText: "Enter your income here"),
+        ),
+        actions: [
+          TextButton(
+            child: Text('SUBMIT'),
+            onPressed: submit,
+          )
+        ],
+      ),
+  );
+  void submit(){
+    Navigator.of(context).pop(_incomeAmountController.text);
   }
 }
 
