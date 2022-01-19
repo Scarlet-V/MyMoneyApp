@@ -100,10 +100,6 @@ class _AddNewLoanState extends State<AddNewLoan> {
                 borderRadius: BorderRadius.circular(20)),
               onPressed: (){
                 final loan = Loan(_loanNameController.text, _loanAmountController.text, _loanMonthlyController.text);
-               /* var route = new MaterialPageRoute(
-                    builder: (BuildContext context) => new HomePage(value: , totalloanamount: , loanmonthlypayment: ),
-                      //billname: _billNameController.text, totalbillamount: _billAmountController.text, billmonthlypayment: _billMonthlyController.text,),
-                );*/
                 Navigator.of(context).pop(loan);
                 },
           ),
@@ -139,33 +135,4 @@ class _AddNewLoanState extends State<AddNewLoan> {
     );
   }
 
-  Widget _loanInformationForm(){
-    return Column(
-      children: [
-        Text("New Loan",
-            style: Theme.of(context).textTheme.headline4),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 10.0, left:30.0, right: 30.0),
-          child: TextField(
-            decoration: InputDecoration(
-              helperText: 'Loan Name',
-            ),
-            maxLines: null,
-            keyboardType: TextInputType.multiline,
-            controller: _loanNameController,
-          ),
-        ),
-        ElevatedButton(
-            onPressed: (){
-              setState(() {
-               // _answer = _getAnswer();
-              }
-              );
-            },
-            child: Text("Save"),
-    ),
-        //_questionAndAnswer()
-      ],
-    );
-  }
 }

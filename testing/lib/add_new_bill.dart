@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:flutter/src/painting/image_provider.dart';
 import 'package:testing/themes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'main.dart';
-import 'package:testing/add_loan_page.dart';
+import 'models/bills.dart';
+
 
 
 
@@ -18,9 +18,9 @@ class AddNewBill extends StatefulWidget {
 }
 
 class _AddNewBillState extends State<AddNewBill> {
-  //var _billNameController = new TextEditingController();
-  //var _billAmountController = new TextEditingController();
-  //var _billMonthlyController = new TextEditingController();
+  var _billNameController = new TextEditingController();
+  var _billAmountController = new TextEditingController();
+  var _billMonthlyController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,6 @@ class _AddNewBillState extends State<AddNewBill> {
       darkTheme: MyThemes.darkTheme,
       color: Theme.of(context).primaryColor,
       home: Scaffold(
-        /*
           body: new ListView(
             children: <Widget>[
               SizedBox(
@@ -99,15 +98,13 @@ class _AddNewBillState extends State<AddNewBill> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
                   onPressed: (){
-                    // var route = new MaterialPageRoute(
-                    // builder: (BuildContext context) => new HomePage(value: _loanNameController.text, totalloanamount: _loanAmountController.text, loanmonthlypayment: _loanMonthlyController.text,billname: _billNameController.text, totalbillamount: _billAmountController.text, billmonthlypayment: _billMonthlyController.text,),
-                    );
-                    Navigator.of(context).push(route);
+                    final bill = Bill(_billNameController.text, _billAmountController.text, _billMonthlyController.text);
+                    Navigator.of(context).pop(bill);
                   },
                 ),
               ),
             ],
-          ),*/
+          ),
           appBar: AppBar(
             title: const Text('Add New Bill'),
             backgroundColor: Theme.of(context).appBarTheme.backgroundColor,

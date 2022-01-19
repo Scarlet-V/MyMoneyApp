@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
+import 'package:testing/models/creditcard.dart';
 import 'package:testing/profile_page.dart';
 import 'package:testing/themes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,6 +8,8 @@ import 'package:testing/add_loan_page.dart';
 import 'package:testing/add_new_bill.dart';
 import 'package:testing/add_new_creditcard.dart';
 import 'models/load.dart';
+import 'models/bills.dart';
+import 'models/creditcard.dart';
 
 void main() {
   runApp(
@@ -18,7 +21,6 @@ void main() {
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
         '/': (context) => HomePage(),
-        //billname: '', totalbillamount: '', billmonthlypayment: '',
         // When navigating to the "/second" route, build the SecondScreen widget.
         '/second': (context) => EditProfilePage(),
         '/third': (context) => AddNewBill(),
@@ -33,19 +35,28 @@ class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
   HomePage({Key? key}) : super(key: key);
-  //required this.billname, required this.totalbillamount, required this.billmonthlypayment
-  //String billname;
-  //String totalbillamount;
-  //String billmonthlypayment;
+
 
 }
 class _HomePageState extends State<HomePage> {
 
   final List<Loan> loans = [];
+  final List<Bill>  bills= [];
+  final List<CreditCard> creditcards=[];
 
   void addNewLoad(Loan loan){
     setState(() {
       loans.add(loan);
+    });
+  }
+  void addNewBill(Bill bill){
+    setState(() {
+      bills.add(bill);
+    });
+  }
+  void addNewCreditCard(CreditCard creditcard){
+    setState(() {
+      creditcards.add(creditcard);
     });
   }
 
@@ -68,12 +79,25 @@ class _HomePageState extends State<HomePage> {
                 ),
           ),
         ),
-
+            for (final bill in bills)
+              Align(
+                alignment: Alignment.topLeft,
+                child:
+                new Text("${bill.name}: (\u0024${bill.total}) \u0024${bill.monthlyPayment}",
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             Align(
               alignment: Alignment.topLeft,
               child: TextButton.icon(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/third');
+                  onPressed: () async {
+                    dynamic bill = await Navigator.pushNamed(context, '/third');
+                    if(bill != null && bill is Bill){
+                      addNewBill(bill);
+                    }
                   },
                   icon: const Icon(
                     Icons.add,
@@ -92,11 +116,25 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+            for (final creditcard in creditcards)
+              Align(
+                alignment: Alignment.topLeft,
+                child:
+                new Text("${creditcard.name}: (\u0024${creditcard.total}) \u0024${creditcard.monthlyPayment}",
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             Align(
               alignment: Alignment.topLeft,
               child: TextButton.icon(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/fourth');
+                  onPressed: () async {
+                    dynamic creditcard = await Navigator.pushNamed(context, '/fourth');
+                    if(creditcard != null && creditcard is CreditCard){
+                      addNewCreditCard(creditcard);
+                    }
                   },
                   icon: const Icon(
                     Icons.add,
@@ -110,7 +148,6 @@ class _HomePageState extends State<HomePage> {
               child: Text('Loans',
                 style: TextStyle(
                   fontSize: 30,
-                  //fontWeight: FontWeight.bold,
                   decoration: TextDecoration.underline,
                 ),
               ),
