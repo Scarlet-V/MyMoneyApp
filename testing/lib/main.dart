@@ -69,16 +69,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
 
-           /* Align(
-              alignment: Alignment.topLeft,
-              child:
-              new Text("${widget.billname}: (\u0024${widget.totalbillamount}) \u0024${widget.billmonthlypayment}",
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),*/
             Align(
               alignment: Alignment.topLeft,
               child: TextButton.icon(
