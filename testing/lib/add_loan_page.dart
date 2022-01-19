@@ -9,6 +9,7 @@ import 'package:testing/models/load.dart';
 import 'package:testing/themes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:testing/add_new_bill.dart';
+import 'package:flutter/services.dart';
 
 
 
@@ -26,6 +27,9 @@ class _AddNewLoanState extends State<AddNewLoan> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      shortcuts: {
+        LogicalKeySet(LogicalKeyboardKey.space): ActivateIntent(),
+      },
       themeMode: ThemeMode.system,
       theme: MyThemes.lightTheme,
       darkTheme: MyThemes.darkTheme,

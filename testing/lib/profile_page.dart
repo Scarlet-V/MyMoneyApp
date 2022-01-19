@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/src/painting/image_provider.dart';
 import 'package:testing/themes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dropdown_formfield/dropdown_formfield.dart';
 
 
 
@@ -18,6 +19,9 @@ class EditProfilePage extends StatefulWidget {
 class _EditProfilePageState extends State<EditProfilePage> {
   bool showPassword = false;
   File? _image;
+  String _myPaycheck ='';
+  String _myActualPaycheck ='';
+  final formKey = new GlobalKey<FormState>();
 
   Future pickImage() async {
     try {
@@ -30,6 +34,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
       print('Failed to pick image: $e');
     }
   }
+  @override
+  void initState() {
+    super.initState();
+    _myPaycheck = '';
+    _myActualPaycheck = '';
+  }
+  /*_saveForm() {
+    var form = formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      setState(() {
+        _myActualPaycheck = _myPaycheck;
+      });
+    }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -121,9 +140,51 @@ class _EditProfilePageState extends State<EditProfilePage> {
               SizedBox(
                 height: 35,
               ),
-              buildTextField("Full Name", "Miranda Silva", false),
-              buildTextField("Theme", "green", false),
-              buildTextField("Paycheck", "bi-monthly", false),
+              buildTextField("Full Name"),
+              buildTextField("Percent Of Income To Save"),
+              //buildTextField("Paycheck"),
+              Container(
+                padding: EdgeInsets.only(bottom: 3),
+                child: DropDownFormField(
+                  titleText: 'Paycheck',
+                  hintText: 'Pick one',
+                  value: _myPaycheck,
+                  onSaved: (value) {
+                    setState(() {
+                      _myPaycheck = value;
+                    });
+                  },
+                  onChanged: (value) {
+                    setState(() {
+                      _myPaycheck = value;
+                    });
+                  },
+                  dataSource: [
+                    {
+                      "display": "Bi-Monthly",
+                      "value": "Bi-Monthly",
+                    },
+                    {
+                      "display": "Monthly",
+                      "value": "Monthly",
+                    },
+                    {
+                      "display": "Weekly",
+                      "value": "Weekly",
+                    },
+                    {
+                      "display": "Daily",
+                      "value": "Daily",
+                    },
+                    {
+                      "display": "Yearly",
+                      "value": "Yearly",
+                    },
+                  ],
+                  textField: 'display',
+                  valueField: 'value',
+                ),
+              ),
               SizedBox(
                 height: 35,
               ),
@@ -142,9 +203,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             )),
                   ),
                   RaisedButton(
-                    onPressed: () {
+                    onPressed: (){},// _saveForm,
                       //add to where it will save user information
-                    },
                     color: Colors.green,
                     padding: EdgeInsets.symmetric(horizontal: 50),
                     elevation: 2,
@@ -159,7 +219,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ),
                   )
                 ],
-              )
+              ),
+            Container(
+            padding: EdgeInsets.all(16),
+            child: Text(_myActualPaycheck),
+            ),
             ],
           ),
         ),
@@ -169,30 +233,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Widget buildTextField(
-      String labelText, String placeholder, bool isPasswordTextField) {
+      String labelText) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 35.0),
       child: TextField(
-        obscureText: isPasswordTextField ? showPassword : false,
-        style: TextStyle(color: Colors.green),
         decoration: InputDecoration(
-            suffixIcon: isPasswordTextField
-                ? IconButton(
-              onPressed: () {
-                setState(() {
-                  showPassword = !showPassword;
-                });
-              },
-              icon: Icon(
-                Icons.remove_red_eye,
-                color: Colors.black,
-              ),
-            )
-                : null,
             contentPadding: EdgeInsets.only(bottom: 3),
             labelText: labelText,
             floatingLabelBehavior: FloatingLabelBehavior.always,
-            hintText: placeholder,
             hintStyle: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,

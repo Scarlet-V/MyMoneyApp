@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:testing/models/creditcard.dart';
 import 'package:testing/profile_page.dart';
 import 'package:testing/themes.dart';
@@ -43,6 +44,9 @@ class _HomePageState extends State<HomePage> {
   final List<Loan> loans = [];
   final List<Bill>  bills= [];
   final List<CreditCard> creditcards=[];
+  var _incomeAmountController = new TextEditingController();
+  //late var balance = 3500 - ${bill.monthlyPayment} - ${loan.monthlyPayment} - ${creditcard.monthlyPayment};
+
 
   void addNewLoad(Loan loan){
     setState(() {
@@ -63,22 +67,46 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      shortcuts: {
+        LogicalKeySet(LogicalKeyboardKey.space): ActivateIntent(),
+      },
       themeMode: ThemeMode.system,
       theme: MyThemes.lightTheme,
       darkTheme: MyThemes.darkTheme,
       color: Theme.of(context).primaryColor,
       home: Scaffold(
-        body: Column(
+      body: Container(
+      padding: EdgeInsets.only(left: 16, top: 20, right: 16),
+        child: Column(
           children:[
-            Align(
+            Container(
+              padding: EdgeInsets.only( bottom: 20, right: 16),
+                child: TextField(
+                decoration: InputDecoration(
+                    labelText: "Income",
+                    labelStyle: TextStyle(
+                        fontSize: 30,
+                        //fontWeight: FontWeight.w500,
+                        color: Colors.black
+                    )
+                ),
+                controller: _incomeAmountController,
+              ),
+            ),
+            Container(
+            //padding:
+            //    if(bill = null){
+             //       padding: EdgeInsets.only(bottom: 10)}
+             //   else{
+             //   padding: EdgeInsets.only(bottom: 0) },
+            child: Align(
               alignment: Alignment.topLeft,
               child: Text('Bills',
                   style: TextStyle(
                       fontSize: 30,
-                    decoration: TextDecoration.underline,
                 ),
           ),
-        ),
+        ),),
             for (final bill in bills)
               Align(
                 alignment: Alignment.topLeft,
@@ -90,6 +118,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
+            // balance = income - ${bill.monthlyPayment} - ${loan.monthlyPayment} - ${creditcard.monthlyPayment}
             Align(
               alignment: Alignment.topLeft,
               child: TextButton.icon(
@@ -106,16 +135,16 @@ class _HomePageState extends State<HomePage> {
                   label: const Text('Add new bill')
               ),
             ),
-            Align(
+            Container(
+              padding: EdgeInsets.only(bottom: 5),
+            child: Align(
               alignment: Alignment.topLeft,
               child: Text('Credit Cards',
                 style: TextStyle(
                   fontSize: 30,
-                  //fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.underline,
                 ),
               ),
-            ),
+            ),),
             for (final creditcard in creditcards)
               Align(
                 alignment: Alignment.topLeft,
@@ -143,15 +172,16 @@ class _HomePageState extends State<HomePage> {
                   label: const Text('Add new credit card')
               ),
             ),
-            Align(
+            Container(
+                padding: EdgeInsets.only(bottom: 5),
+                child: Align(
               alignment: Alignment.topLeft,
               child: Text('Loans',
                 style: TextStyle(
                   fontSize: 30,
-                  decoration: TextDecoration.underline,
                 ),
               ),
-            ),
+            ),),
 
             for (final loan in loans)
               Align(
@@ -185,6 +215,7 @@ class _HomePageState extends State<HomePage> {
             ),
             ],
           ),
+      ),
         appBar: AppBar(
           title: const Text('My Money'),
           actions: <Widget>[
@@ -197,7 +228,6 @@ class _HomePageState extends State<HomePage> {
                 // Navigate to the second screen using a named route.
                 Navigator.pushNamed(context, '/second');
               },
-
               // child: const Text('Launch screen'),
             ),
       ],
@@ -228,9 +258,3 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget buildInsertButton() => ElevatedButton(
-    child: Text('Add new loan',
-    style: TextStyle(fontSize: 20)
-    ),
-    onPressed: (){}
-);
