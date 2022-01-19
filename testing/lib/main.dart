@@ -293,13 +293,23 @@ class _HomePageState extends State<HomePage> {
         content: TextField(
           controller: _incomeAmountController,
           autofocus: true,
-          decoration: InputDecoration(hintText: "Enter your income here"),
+          decoration: InputDecoration(hintText: "Enter your income here",
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.green),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.green),
+            ),  ),
         ),
         actions: [
           TextButton(
-            child: Text('SUBMIT'),
+            child: Text('SUBMIT',
+              style: TextStyle(
+                color: Colors.green,
+              ),),
             onPressed: submit,
-          )
+            ),
+
         ],
       ),
   );
