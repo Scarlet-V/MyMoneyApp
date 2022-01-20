@@ -1,10 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:testing/themes.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'models/creditcard.dart';
 
 
@@ -43,7 +40,6 @@ class _AddNewCreditCardState extends State<AddNewCreditCard> {
                         color: Colors.black
                     ),
                   ),
-
                   controller: _creditcardNameController,
                 ),
               ),

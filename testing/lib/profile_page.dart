@@ -6,8 +6,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/src/painting/image_provider.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 import 'package:testing/themes.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:dropdown_formfield/dropdown_formfield.dart';
 
 class EditProfilePage extends StatefulWidget {
   @override
@@ -49,27 +47,23 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _myPaycheck = '';
     _myActualPaycheck = '';
     loadPercentageToSave();
-
   }
 
   void loadPercentageToSave() async {
     final ssp = await StreamingSharedPreferences.instance;
-    final percentageToSavePref = ssp.getInt('percentage_to_save', defaultValue: 0);
-        percentageToSave = percentageToSavePref.getValue();
-        _percentageToSaveController.text = percentageToSave.toString();
-
+    final percentageToSavePref =
+        ssp.getInt('percentage_to_save', defaultValue: 0);
+    percentageToSave = percentageToSavePref.getValue();
+    _percentageToSaveController.text = percentageToSave.toString();
   }
 
   void savePercentageToSave() async {
     final newPercentage = int.tryParse(_percentageToSaveController.text);
     final ssp = await StreamingSharedPreferences.instance;
-    if(newPercentage != null){
+    if (newPercentage != null) {
       ssp.setInt('percentage_to_save', newPercentage);
     }
-
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -164,30 +158,31 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     height: 35,
                   ),
                   buildTextField("Full Name"),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 35.0),
-                  child: TextField(
-                    onChanged: (String value){
-                      final temp = int.tryParse(value);
-                      if(temp != null){
-                        percentageToSave = temp;
-                      }
-                    },
-                    controller:  _percentageToSaveController,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(bottom: 3),
-                      labelText: "Percent Of Income To Save",
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      hintStyle: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green,
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 35.0),
+                    child: TextField(
+                      onChanged: (String value) {
+                        final temp = int.tryParse(value);
+                        if (temp != null) {
+                          percentageToSave = temp;
+                        }
+                      },
+                      controller: _percentageToSaveController,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(bottom: 3),
+                        labelText: "Percent Of Income To Save",
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        hintStyle: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        ),
+                        labelStyle: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                      labelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
-                ),
-                 // buildTextField(Percent Of Income To Sav"e"),
+                  // buildTextField(Percent Of Income To Sav"e"),
                   //buildTextField("Paycheck"),
                   Container(
                     padding: EdgeInsets.only(bottom: 3),

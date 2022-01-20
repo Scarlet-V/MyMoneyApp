@@ -1,18 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:flutter/src/painting/image_provider.dart';
-import 'package:testing/main.dart';
 import 'package:testing/models/load.dart';
 import 'package:testing/themes.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:testing/add_new_bill.dart';
-import 'package:flutter/services.dart';
-
-
-
 
 class AddNewLoan extends StatefulWidget {
   @override
@@ -41,19 +31,17 @@ class _AddNewLoanState extends State<AddNewLoan> {
                 height: 30,
               ),
               new ListTile(
-                  title: new TextField(
-                    decoration: InputDecoration(
-                        labelText: "Loan Name",
-                        labelStyle: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black
-                        ),
-                    ),
-
+                title: new TextField(
+                  decoration: InputDecoration(
+                    labelText: "Loan Name",
+                    labelStyle: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black),
+                  ),
                   controller: _loanNameController,
-                          ),
-                          ),
+                ),
+              ),
               SizedBox(
                 height: 30,
               ),
@@ -64,9 +52,7 @@ class _AddNewLoanState extends State<AddNewLoan> {
                       labelStyle: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
-                          color: Colors.black
-                      )
-                  ),
+                          color: Colors.black)),
                   controller: _loanAmountController,
                 ),
               ),
@@ -76,46 +62,45 @@ class _AddNewLoanState extends State<AddNewLoan> {
               new ListTile(
                 title: new TextField(
                   decoration: InputDecoration(
-                    labelText: "Monthly Loan Payments",
+                      labelText: "Monthly Loan Payments",
                       labelStyle: TextStyle(
-                        fontSize: 20,
+                          fontSize: 20,
                           fontWeight: FontWeight.w500,
-                        color: Colors.black
-                      )
-                  ),
+                          color: Colors.black)),
                   controller: _loanMonthlyController,
                 ),
               ),
               SizedBox(
-                height:250,
+                height: 250,
               ),
-          new ListTile(
-          title: new RaisedButton(
-              child: new Text("Save",
-                style: TextStyle(
-                    fontSize: 14,
-                    letterSpacing: 2.2,
-                    color: Colors.white),
+              new ListTile(
+                title: new RaisedButton(
+                  child: new Text(
+                    "Save",
+                    style: TextStyle(
+                        fontSize: 14, letterSpacing: 2.2, color: Colors.white),
+                  ),
+                  color: Colors.green,
+                  padding: EdgeInsets.symmetric(horizontal: 50),
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  onPressed: () {
+                    final totalParsed =
+                        double.tryParse(_loanAmountController.text);
+                    final monthlyParsed =
+                        double.tryParse(_loanMonthlyController.text);
+                    if (totalParsed != null && monthlyParsed != null) {
+                      final loan = Loan(
+                          _loanNameController.text, totalParsed, monthlyParsed);
+                      Navigator.of(context).pop(loan);
+                    }
+                    ;
+                  },
+                ),
               ),
-            color: Colors.green,
-            padding: EdgeInsets.symmetric(horizontal: 50),
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20)),
-              onPressed: (){
-
-                final totalParsed = double.tryParse(_loanAmountController.text);
-                final monthlyParsed = double.tryParse(_loanMonthlyController.text);
-                if(totalParsed != null && monthlyParsed != null){
-                  final loan =
-                  Loan(_loanNameController.text, totalParsed, monthlyParsed);
-                  Navigator.of(context).pop(loan);
-                };
-                },
-          ),
-          ),
             ],
-              ),
+          ),
           appBar: AppBar(
             title: const Text('Add New Loan'),
             backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
@@ -123,7 +108,6 @@ class _AddNewLoanState extends State<AddNewLoan> {
             leading: IconButton(
               icon: Icon(
                 Icons.arrow_back,
-
               ),
               onPressed: () {
                 Navigator.pop(context);
@@ -140,9 +124,7 @@ class _AddNewLoanState extends State<AddNewLoan> {
                 // child: const Text('Launch screen'),
               ),
             ],
-          )
-      ),
+          )),
     );
   }
-
 }

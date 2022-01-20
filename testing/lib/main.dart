@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:testing/models/creditcard.dart';
 import 'package:testing/profile_page.dart';
 import 'package:testing/themes.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:testing/add_loan_page.dart';
 import 'package:testing/add_new_bill.dart';
 import 'package:testing/add_new_creditcard.dart';
@@ -49,7 +48,6 @@ class _HomePageState extends State<HomePage> {
   int percentageToSave = 0;
   double amountToSave = 0;
   double amountToSpend = 0;
-  //late var balance = 3500 - ${bill.monthlyPayment} - ${loan.monthlyPayment} - ${creditcard.monthlyPayment};
 
   void _calculateAndUpdate() {
     double loan = 0, bill = 0, creditCard = 0;
@@ -190,12 +188,14 @@ class _HomePageState extends State<HomePage> {
                         TextSpan(
                             text: NumberFormat.currency(
                                     locale: 'en_US', symbol: '\$')
-                                .format(bill.total), style: TextStyle(color: Colors.red)),
+                                .format(bill.total),
+                            style: TextStyle(color: Colors.red)),
                         TextSpan(text: ") "),
                         TextSpan(
                             text: NumberFormat.currency(
                                     locale: 'en_US', symbol: '\$')
-                                .format(bill.monthlyPayment), style: TextStyle(color: Colors.red))
+                                .format(bill.monthlyPayment),
+                            style: TextStyle(color: Colors.red))
                       ],
                       style: TextStyle(
                         fontSize: 15,
@@ -248,13 +248,15 @@ class _HomePageState extends State<HomePage> {
                         TextSpan(text: "("),
                         TextSpan(
                             text: NumberFormat.currency(
-                                locale: 'en_US', symbol: '\$')
-                                .format(creditcard.total), style: TextStyle(color: Colors.red)),
+                                    locale: 'en_US', symbol: '\$')
+                                .format(creditcard.total),
+                            style: TextStyle(color: Colors.red)),
                         TextSpan(text: ") "),
                         TextSpan(
                             text: NumberFormat.currency(
-                                locale: 'en_US', symbol: '\$')
-                                .format(creditcard.monthlyPayment), style: TextStyle(color: Colors.red))
+                                    locale: 'en_US', symbol: '\$')
+                                .format(creditcard.monthlyPayment),
+                            style: TextStyle(color: Colors.red))
                       ],
                       style: TextStyle(
                         fontSize: 15,
@@ -263,7 +265,6 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-
                 ),
               Align(
                 alignment: Alignment.topLeft,
@@ -306,13 +307,15 @@ class _HomePageState extends State<HomePage> {
                         TextSpan(text: "("),
                         TextSpan(
                             text: NumberFormat.currency(
-                                locale: 'en_US', symbol: '\$')
-                                .format(loan.total), style: TextStyle(color: Colors.red)),
+                                    locale: 'en_US', symbol: '\$')
+                                .format(loan.total),
+                            style: TextStyle(color: Colors.red)),
                         TextSpan(text: ") "),
                         TextSpan(
                             text: NumberFormat.currency(
-                                locale: 'en_US', symbol: '\$')
-                                .format(loan.monthlyPayment), style: TextStyle(color: Colors.red))
+                                    locale: 'en_US', symbol: '\$')
+                                .format(loan.monthlyPayment),
+                            style: TextStyle(color: Colors.red))
                       ],
                       style: TextStyle(
                         fontSize: 15,
