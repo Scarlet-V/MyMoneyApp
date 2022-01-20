@@ -11,6 +11,8 @@ import 'package:testing/add_new_creditcard.dart';
 import 'models/load.dart';
 import 'models/bills.dart';
 import 'models/creditcard.dart';
+import 'package:intl/intl.dart';
+import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
 void main() {
   runApp(
@@ -36,43 +38,72 @@ class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
   HomePage({Key? key}) : super(key: key);
-
-
 }
-class _HomePageState extends State<HomePage> {
 
+class _HomePageState extends State<HomePage> {
   final List<Loan> loans = [];
-  final List<Bill>  bills= [];
-  final List<CreditCard> creditcards=[];
+  final List<Bill> bills = [];
+  final List<CreditCard> creditcards = [];
   var _incomeAmountController = new TextEditingController();
-  String income = '';
+  double income = 0;
+  int percentageToSave = 0;
+  double amountToSave = 0;
+  double amountToSpend = 0;
   //late var balance = 3500 - ${bill.monthlyPayment} - ${loan.monthlyPayment} - ${creditcard.monthlyPayment};
 
+  void _calculateAndUpdate() {
+    double loan = 0, bill = 0, creditCard = 0;
+    loans.forEach((e) {
+      loan += e.monthlyPayment;
+    });
+    bills.forEach((e) {
+      bill += e.monthlyPayment;
+    });
+    creditcards.forEach((e) {
+      creditCard += e.monthlyPayment;
+    });
+    double monthlyPay = loan + bill + creditCard;
+    amountToSave = (income - monthlyPay) * percentageToSave * 0.01;
+    amountToSpend = (income - monthlyPay) - amountToSave;
+    setState(() {});
+  }
 
-  void addNewLoad(Loan loan){
-    setState(() {
-      loans.add(loan);
+  void addNewLoad(Loan loan) {
+    loans.add(loan);
+    _calculateAndUpdate();
+  }
+
+  void addNewBill(Bill bill) {
+    bills.add(bill);
+    _calculateAndUpdate();
+  }
+
+  void addNewCreditCard(CreditCard creditcard) {
+    creditcards.add(creditcard);
+    _calculateAndUpdate();
+  }
+
+  void loadPercentageToSave() async {
+    final ssp = await StreamingSharedPreferences.instance;
+    final ptsPref = ssp.getInt('percentage_to_save', defaultValue: 0);
+    ptsPref.listen((value) {
+      percentageToSave = value;
+      _calculateAndUpdate();
     });
   }
-  void addNewBill(Bill bill){
-    setState(() {
-      bills.add(bill);
-    });
-  }
-  void addNewCreditCard(CreditCard creditcard){
-    setState(() {
-      creditcards.add(creditcard);
-    });
-  }
+
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _incomeAmountController = TextEditingController();
+
+    loadPercentageToSave();
   }
+
   @override
-  void dispose(){
+  void dispose() {
     _incomeAmountController.dispose();
-        super.dispose();
+    super.dispose();
   }
 
   @override
@@ -86,166 +117,232 @@ class _HomePageState extends State<HomePage> {
       darkTheme: MyThemes.darkTheme,
       color: Theme.of(context).primaryColor,
       home: Scaffold(
-      body: Container(
-      padding: EdgeInsets.only(left: 16, top: 20, right: 16),
-        child: Column(
-          children:[
-            Container(
-              padding: EdgeInsets.only(  right: 16),
+        body: Container(
+          padding: EdgeInsets.only(left: 16, top: 20, right: 16),
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.only(right: 16),
                 child: Row(
                   children: [
-                    Expanded(child: Text("Income: ",
-                    style: TextStyle(fontSize: 30),
-                    ),
+                    Expanded(
+                      child: Text(
+                        "Income: ",
+                        style: TextStyle(fontSize: 30),
+                      ),
                     ),
                     const SizedBox(width: 12),
-                      Text('\u0024${income}',
-                      style: TextStyle(
-                        fontSize: 30,
-                        color: Colors.green
-                      ),),
+                    Text(
+                      '${NumberFormat.currency(locale: 'en_US', symbol: '\$').format(income)}',
+                      style: TextStyle(fontSize: 30, color: Colors.green),
+                    ),
                   ],
                 ),
-            ),
-            Container(
+              ),
+              Container(
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: TextButton.icon(
-                  onPressed: () async {
-                    final income = await openDialog();
-                    if (income == null || income.isEmpty) return;
-                    setState(() => this.income = income);
-                  },
-                  icon: const Icon(
-                    Icons.add,
-                    color: Colors.green,
-                  ),
-                  label: const Text('Input your income', style: TextStyle(color: Colors.green),)
+                      onPressed: () async {
+                        final income = await openDialog();
+                        if (income == null || income.isEmpty) return;
+                        final parsedIncome = double.tryParse(income);
+                        if (parsedIncome != null) {
+                          this.income = parsedIncome;
+                          _calculateAndUpdate();
+                        }
+                      },
+                      icon: const Icon(
+                        Icons.add,
+                        color: Colors.green,
+                      ),
+                      label: const Text(
+                        'Input your income',
+                        style: TextStyle(color: Colors.green),
+                      )),
+                ),
               ),
-              ),),
-            Container(
-            //padding:
-            //    if(bill = null){
-             //       padding: EdgeInsets.only(bottom: 10)}
-             //   else{
-             //   padding: EdgeInsets.only(bottom: 0) },
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Text('Bills',
-                  style: TextStyle(
+              Container(
+                //padding:
+                //    if(bill = null){
+                //       padding: EdgeInsets.only(bottom: 10)}
+                //   else{
+                //   padding: EdgeInsets.only(bottom: 0) },
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    'Bills',
+                    style: TextStyle(
                       fontSize: 30,
-                ),
-          ),
-        ),),
-            for (final bill in bills)
-              Align(
-                alignment: Alignment.topLeft,
-                child:
-                new Text("${bill.name}: (\u0024${bill.total}) \u0024${bill.monthlyPayment}",
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            // balance = income - ${bill.monthlyPayment} - ${loan.monthlyPayment} - ${creditcard.monthlyPayment}
-            Align(
-              alignment: Alignment.topLeft,
-              child: TextButton.icon(
-                  onPressed: () async {
-                    dynamic bill = await Navigator.pushNamed(context, '/third');
-                    if(bill != null && bill is Bill){
-                      addNewBill(bill);
-                    }
-                  },
-                  icon: const Icon(
-                    Icons.add,
-                    color: Colors.green,
-                  ),
-                  label: const Text('Add new bill', style: TextStyle(color: Colors.green),)
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(bottom: 5),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Text('Credit Cards',
-                style: TextStyle(
-                  fontSize: 30,
-                ),
-              ),
-            ),),
-            for (final creditcard in creditcards)
-              Align(
-                alignment: Alignment.topLeft,
-                child:
-                new Text("${creditcard.name}: (\u0024${creditcard.total}) \u0024${creditcard.monthlyPayment}",
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: TextButton.icon(
-                        onPressed: () async {
-                          dynamic creditcard = await Navigator.pushNamed(context, '/fourth');
-                          if(creditcard != null && creditcard is CreditCard){
-                            addNewCreditCard(creditcard);
-                          }
-                        },
-                        icon: const Icon(
-                          Icons.add,
-                          color: Colors.green,
-                        ),
-                        label: const Text('Add new credit card', style: TextStyle(color: Colors.green))
                     ),
                   ),
-            Container(
-                padding: EdgeInsets.only(bottom: 5),
-                child: Align(
-              alignment: Alignment.topLeft,
-              child: Text('Loans',
-                style: TextStyle(
-                  fontSize: 30,
                 ),
               ),
-            ),),
-
-            for (final loan in loans)
-              Align(
-              alignment: Alignment.topLeft,
-              child:
-              new Text("${loan.name}: (\u0024${loan.total}) \u0024${loan.monthlyPayment}",
-              style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-              ),
-            ),
-            ),
-
-
-
-            Align(
-              alignment: Alignment.topLeft,
-              child: TextButton.icon(
-                  onPressed: () async {
-                    dynamic loan = await Navigator.pushNamed(context, '/fifth');
-                    if(loan != null && loan is Loan){
-                      addNewLoad(loan);
-                    }
-                  },
-                  icon: const Icon(
-                    Icons.add,
-                    color: Colors.green,
+              for (final bill in bills)
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(text: bill.name),
+                        TextSpan(text: ' : '),
+                        TextSpan(text: "("),
+                        TextSpan(
+                            text: NumberFormat.currency(
+                                    locale: 'en_US', symbol: '\$')
+                                .format(bill.total), style: TextStyle(color: Colors.red)),
+                        TextSpan(text: ") "),
+                        TextSpan(
+                            text: NumberFormat.currency(
+                                    locale: 'en_US', symbol: '\$')
+                                .format(bill.monthlyPayment), style: TextStyle(color: Colors.red))
+                      ],
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
-                  label: const Text('Add new loan', style: TextStyle(color: Colors.green))
+                ),
+              // balance = income - ${bill.monthlyPayment} - ${loan.monthlyPayment} - ${creditcard.monthlyPayment}
+              Align(
+                alignment: Alignment.topLeft,
+                child: TextButton.icon(
+                    onPressed: () async {
+                      dynamic bill =
+                          await Navigator.pushNamed(context, '/third');
+                      if (bill != null && bill is Bill) {
+                        addNewBill(bill);
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.add,
+                      color: Colors.green,
+                    ),
+                    label: const Text(
+                      'Add new bill',
+                      style: TextStyle(color: Colors.green),
+                    )),
               ),
-            ),
+              Container(
+                padding: EdgeInsets.only(bottom: 5),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    'Credit Cards',
+                    style: TextStyle(
+                      fontSize: 30,
+                    ),
+                  ),
+                ),
+              ),
+              for (final creditcard in creditcards)
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(text: creditcard.name),
+                        TextSpan(text: ' : '),
+                        TextSpan(text: "("),
+                        TextSpan(
+                            text: NumberFormat.currency(
+                                locale: 'en_US', symbol: '\$')
+                                .format(creditcard.total), style: TextStyle(color: Colors.red)),
+                        TextSpan(text: ") "),
+                        TextSpan(
+                            text: NumberFormat.currency(
+                                locale: 'en_US', symbol: '\$')
+                                .format(creditcard.monthlyPayment), style: TextStyle(color: Colors.red))
+                      ],
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+
+                ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: TextButton.icon(
+                    onPressed: () async {
+                      dynamic creditcard =
+                          await Navigator.pushNamed(context, '/fourth');
+                      if (creditcard != null && creditcard is CreditCard) {
+                        addNewCreditCard(creditcard);
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.add,
+                      color: Colors.green,
+                    ),
+                    label: const Text('Add new credit card',
+                        style: TextStyle(color: Colors.green))),
+              ),
+              Container(
+                padding: EdgeInsets.only(bottom: 5),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    'Loans',
+                    style: TextStyle(
+                      fontSize: 30,
+                    ),
+                  ),
+                ),
+              ),
+
+              for (final loan in loans)
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(text: loan.name),
+                        TextSpan(text: ' : '),
+                        TextSpan(text: "("),
+                        TextSpan(
+                            text: NumberFormat.currency(
+                                locale: 'en_US', symbol: '\$')
+                                .format(loan.total), style: TextStyle(color: Colors.red)),
+                        TextSpan(text: ") "),
+                        TextSpan(
+                            text: NumberFormat.currency(
+                                locale: 'en_US', symbol: '\$')
+                                .format(loan.monthlyPayment), style: TextStyle(color: Colors.red))
+                      ],
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+
+              Align(
+                alignment: Alignment.topLeft,
+                child: TextButton.icon(
+                    onPressed: () async {
+                      dynamic loan =
+                          await Navigator.pushNamed(context, '/fifth');
+                      if (loan != null && loan is Loan) {
+                        addNewLoad(loan);
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.add,
+                      color: Colors.green,
+                    ),
+                    label: const Text('Add new loan',
+                        style: TextStyle(color: Colors.green))),
+              ),
             ],
           ),
-      ),
+        ),
         appBar: AppBar(
           title: const Text('My Money'),
           actions: <Widget>[
@@ -260,61 +357,67 @@ class _HomePageState extends State<HomePage> {
               },
               // child: const Text('Launch screen'),
             ),
-      ],
-            ),
-          bottomNavigationBar: new Container(
+          ],
+        ),
+        bottomNavigationBar: new Container(
             color: Theme.of(context).scaffoldBackgroundColor,
             child: Row(
               children: <Widget>[
                 Expanded(
                   child: ListTile(
                     textColor: Colors.green,
-                    title: new Text("Balance: "),
-                    subtitle: new Text("\$230"),
+                    title: new Text("Available to spend: "),
+                    subtitle: new Text(
+                        NumberFormat.currency(locale: 'en_US', symbol: '\$')
+                            .format(amountToSpend)),
                   ),
                 ),
                 Expanded(
                   child: ListTile(
                     textColor: Colors.blue,
-                    title: new Text("Saving: "),
-                    subtitle: new Text("\$130"),
+                    title: new Text("Amount to save: "),
+                    subtitle: new Text(
+                        NumberFormat.currency(locale: 'en_US', symbol: '\$')
+                            .format(amountToSave)),
                   ),
                 ),
               ],
-            )
-          ),
-            ),
-        );
-  }
-  Future<String?> openDialog() => showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Your Income"),
-        content: TextField(
-          controller: _incomeAmountController,
-          autofocus: true,
-          decoration: InputDecoration(hintText: "Enter your income here",
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.green),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.green),
-            ),  ),
-        ),
-        actions: [
-          TextButton(
-            child: Text('SUBMIT',
-              style: TextStyle(
-                color: Colors.green,
-              ),),
-            onPressed: submit,
-            ),
-
-        ],
+            )),
       ),
-  );
-  void submit(){
+    );
+  }
+
+  Future<String?> openDialog() => showDialog<String>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Your Income"),
+          content: TextField(
+            controller: _incomeAmountController,
+            autofocus: true,
+            decoration: InputDecoration(
+              hintText: "Enter your income here",
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.green),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.green),
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: Text(
+                'SUBMIT',
+                style: TextStyle(
+                  color: Colors.green,
+                ),
+              ),
+              onPressed: submit,
+            ),
+          ],
+        ),
+      );
+  void submit() {
     Navigator.of(context).pop(_incomeAmountController.text);
   }
 }
-

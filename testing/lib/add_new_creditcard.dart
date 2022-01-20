@@ -96,8 +96,14 @@ class _AddNewCreditCardState extends State<AddNewCreditCard> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
                   onPressed: (){
-                    final creditcard = CreditCard(_creditcardNameController.text, _creditcardAmountController.text, _creditcardMonthlyController.text);
-                    Navigator.of(context).pop(creditcard);
+
+                final totalParsed = double.tryParse(_creditcardAmountController.text);
+                final monthlyParsed = double.tryParse(_creditcardMonthlyController.text);
+                if(totalParsed != null && monthlyParsed != null){
+                final creditcard =
+                CreditCard(_creditcardNameController.text, totalParsed, monthlyParsed);
+                Navigator.of(context).pop(creditcard);
+                  };
                   },
                 ),
               ),

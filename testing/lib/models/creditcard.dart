@@ -1,7 +1,7 @@
 class CreditCard {
   final String name;
-  final String total;
-  final String monthlyPayment;
+  final double total;
+  final double monthlyPayment;
 
   CreditCard(this.name, this.total, this.monthlyPayment);
 

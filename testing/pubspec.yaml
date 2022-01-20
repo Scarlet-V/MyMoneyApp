@@ -37,6 +37,8 @@ dependencies:
   image_picker: ^0.8.4+4
   shared_preferences: ^2.0.12
   dropdown_formfield: ^0.1.4
+  intl: ^0.17.0
+  streaming_shared_preferences: ^2.0.0
 
 
 dev_dependencies:

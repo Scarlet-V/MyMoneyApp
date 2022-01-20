@@ -103,8 +103,14 @@ class _AddNewLoanState extends State<AddNewLoan> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20)),
               onPressed: (){
-                final loan = Loan(_loanNameController.text, _loanAmountController.text, _loanMonthlyController.text);
-                Navigator.of(context).pop(loan);
+
+                final totalParsed = double.tryParse(_loanAmountController.text);
+                final monthlyParsed = double.tryParse(_loanMonthlyController.text);
+                if(totalParsed != null && monthlyParsed != null){
+                  final loan =
+                  Loan(_loanNameController.text, totalParsed, monthlyParsed);
+                  Navigator.of(context).pop(loan);
+                };
                 },
           ),
           ),

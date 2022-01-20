@@ -98,8 +98,15 @@ class _AddNewBillState extends State<AddNewBill> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
                   onPressed: (){
-                    final bill = Bill(_billNameController.text, _billAmountController.text, _billMonthlyController.text);
-                    Navigator.of(context).pop(bill);
+
+                    final totalParsed = double.tryParse(_billAmountController.text);
+                    final monthlyParsed = double.tryParse(_billMonthlyController.text);
+                    if(totalParsed != null && monthlyParsed != null){
+                      final bill =
+                      Bill(_billNameController.text, totalParsed,monthlyParsed );
+                      Navigator.of(context).pop(bill);
+                    }
+
                   },
                 ),
               ),
